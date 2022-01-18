@@ -1,0 +1,31 @@
+{
+  "name": "resizr",
+  "version": "1.0.0",
+  "description": "an image resizing api",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "lint": "eslint . --ext .ts",
+    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "jasmine": "jasmine",
+    "start": "nodemon src/index.ts"
+  },
+  "author": "burako",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jasmine": "^3.10.3",
+    "@types/node": "^17.0.9",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "express": "^4.17.2",
+    "jasmine": "^4.0.2",
+    "jasmine-spec-reporter": "^7.0.0"
+  }
+}
