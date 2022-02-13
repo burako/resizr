@@ -7,7 +7,7 @@ routes.get('/', (req, res) => {
 });
 
 routes.get('/images', resizePic, (req, res) => {
-  res.send('get name and size from url, resize using middleware');
+  //res.send('get name and size from url, resize using middleware');
 });
 
 export default routes;

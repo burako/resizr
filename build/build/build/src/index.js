@@ -12,7 +12,6 @@ const port = 3000;
 // });
 app.use('/', routeIndex_1.default);
 app.use('/images', routeIndex_1.default);
-app.use('/images', express_1.default.static('assets/thumb'));
 app.listen(port, () => {
     console.log(`this app is listening to you on port ${port}`);
 });
