@@ -14,35 +14,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sharp_1 = __importDefault(require("sharp"));
 const posix_1 = require("path/posix");
-const promises_1 = __importDefault(require("fs/promises"));
+const promises_1 = require("fs/promises");
+const fs_1 = require("fs");
 const resize = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const picName = req.query.picname;
     const picWidth = parseInt(req.query.width);
     const picHeight = parseInt(req.query.height);
-    const filePath = (0, posix_1.resolve)('src/assets/thumb/' + picName + '.jpeg');
-    const stats = yield promises_1.default.stat(filePath)
-        .catch((error) => __awaiter(void 0, void 0, void 0, function* () {
-        if (error) {
-            console.log('File doesnt exist in path, I will resize');
-        }
-    }));
-    // fs.stat(filePath, (exists) => {
-    //   if (exists == null) {
-    //       console.log('File exists in path');
-    //       res.sendFile(filePath); //bu islemin async sekilde sharp in bitirmesini beklemesini saglamam lazim -> https://knowledge.udacity.com/questions/780792
-    //   } else if (exists.code === 'ENOENT') {
-    //       console.log('File doesnt exist in path');
-    //       const resizedImage = resizeImage(picName, picWidth, picHeight, filePath) as unknown as string;
-    //       console.log(resizedImage);
-    //       //res.sendFile(resizedImage);
+    let outputPath = (0, posix_1.resolve)('src/assets/thumb/' + picName + '.jpeg');
+    //const stats = await fsPromises.access(outputPath, fs.constants.F_OK,)
+    try {
+        yield (0, promises_1.access)(outputPath, fs_1.constants.F_OK);
+        console.log('can access');
+        res.sendFile(outputPath);
+    }
+    catch (_a) {
+        console.error('File doesnt exist in path, I will resize');
+    }
+    // .catch(async (error) => {
+    //   if (error) {
+    //     console.log('File doesnt exist in path, I will resize');
+    //     const processedImage = await resizeImage(picName, picWidth, picHeight, outputPath) as unknown as string;
+    //     console.log(processedImage);
+    //     res.sendFile(processedImage);
     //   }
+    //   // else {
+    //   //   console.log('File exists');
+    //   //   res.sendFile(outputPath);
+    //   // }
     // });
     next();
 });
-function resizeImage(picName, picWidth, picHeight, filePath) {
+function resizeImage(picName, picWidth, picHeight, outputPath) {
     return __awaiter(this, void 0, void 0, function* () {
         const inputPath = (0, posix_1.resolve)('src/assets/full/' + picName + '.jpeg');
-        const outputPath = filePath;
         try {
             yield (0, sharp_1.default)(inputPath)
                 .resize(picWidth, picHeight)
