@@ -1,53 +1,52 @@
 import express, { response } from 'express';
 import sharp from 'sharp';
 import { resolve } from 'path/posix';
-import fs from 'fs';
+import fsPromises from 'fs/promises';
 
-const resize = (
+const resize = async (
   req: express.Request,
   res: express.Response,
   next: Function
-): void => {
-  const picName = req.query.picname;
+): Promise<void> => {
+  const picName = req.query.picname as string;
   const picWidth = parseInt(req.query.width as string);
   const picHeight = parseInt(req.query.height as string);
 
-  const filePath = resolve('src/assets/thumb/' + picName + '.jpeg');
+  let outputPath = resolve('src/assets/thumb/' + picName + '.jpeg');
 
-  fs.stat(filePath, (exists) => {
-    if (exists == null) {
-        console.log('File exists in path');
-        res.sendFile(filePath); //bu islemin async sekilde sharp in bitirmesini beklemesini saglamam lazim -> https://knowledge.udacity.com/questions/780792
-    } else if (exists.code === 'ENOENT') {
-        console.log('File doesnt exist in path');
-        const resizedImage = resizeImage() as unknown as string;
-        console.log(resizedImage);
-        //res.sendFile(resizedImage);
-    }
-  });
+  const stats = await fsPromises.stat(outputPath)
+    .catch(async (error) => {
+      if (error) {
+        console.log('File doesnt exist in path, I will resize');
+        const processedImage = await resizeImage(picName, picWidth, picHeight, outputPath) as unknown as string;
+        res.sendFile(processedImage);
+      }
+      else {
+        console.log('File exists');
+        res.sendFile(outputPath);
+      }
+    });
 
-  
   next();
 
-  async function resizeImage () : Promise<string|undefined> {
-
-    const inputPath = resolve('src/assets/full/' + picName + '.jpeg');
-    const outputPath = filePath;
-    try{
-        await 
-        sharp(inputPath)
-            .resize(picWidth, picHeight)
-            .toFile(outputPath, function (err) {
-                console.log(err);
-            });
-        return outputPath;
-
-    }
-    catch (err) {
-        console.log(err);
-    }
-  }
-
 };
+
+async function resizeImage (picName: string, picWidth: number, picHeight: number, outputPath: string) : Promise<string|undefined> {
+
+  const inputPath = resolve('src/assets/full/' + picName + '.jpeg');
+  try{
+      await 
+      sharp(inputPath)
+          .resize(picWidth, picHeight)
+          .toFile(outputPath, function (err) {
+              console.log(err);
+          });
+      return outputPath;
+
+  }
+  catch (err) {
+      console.log(err);
+  }
+}
 
 export default resize;
