@@ -4,7 +4,6 @@ import { resolve } from 'path/posix';
 import { access } from 'fs/promises';
 import { constants } from 'fs';
 
-
 const resize = async (
   req: express.Request,
   res: express.Response,
@@ -14,7 +13,7 @@ const resize = async (
   const picWidth = parseInt(req.query.width as string);
   const picHeight = parseInt(req.query.height as string);
 
-  let outputPath = resolve('src/assets/thumb/' + picName + '.jpeg');
+  const outputPath = resolve('src/assets/thumb/' + picName + '.jpeg');
 
   //const stats = await fsPromises.access(outputPath, fs.constants.F_OK,)
 
@@ -23,36 +22,37 @@ const resize = async (
     console.log('can access');
     res.sendFile(outputPath);
   } catch {
-    const processedImage = await resizeImage(picName, picWidth, picHeight, outputPath) as unknown as string;
+    const processedImage = (await resizeImage(
+      picName,
+      picWidth,
+      picHeight,
+      outputPath
+    )) as unknown as string;
     //console.log(processedImage);
     res.sendFile(processedImage, function (err) {
       if (err) {
         console.log('333' + err);
-      }
-      else {
+      } else {
         console.log('Sent:', processedImage);
       }
     });
-    
   }
 
   next();
-
 };
 
-async function resizeImage (picName: string, picWidth: number, picHeight: number, outputPath: string) : Promise<string|undefined> {
-
+async function resizeImage(
+  picName: string,
+  picWidth: number,
+  picHeight: number,
+  outputPath: string
+): Promise<string | undefined> {
   const inputPath = resolve('src/assets/full/' + picName + '.jpeg');
-  try{
-      await 
-      sharp(inputPath)
-          .resize(picWidth, picHeight)
-          .toFile(outputPath);
-      return outputPath;
-
-  }
-  catch (err) {
-      console.log('111' + err);
+  try {
+    await sharp(inputPath).resize(picWidth, picHeight).toFile(outputPath);
+    return outputPath;
+  } catch (err) {
+    console.log('111' + err);
   }
 }
 

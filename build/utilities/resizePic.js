@@ -20,7 +20,7 @@ const resize = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
     const picName = req.query.picname;
     const picWidth = parseInt(req.query.width);
     const picHeight = parseInt(req.query.height);
-    let outputPath = (0, posix_1.resolve)('src/assets/thumb/' + picName + '.jpeg');
+    const outputPath = (0, posix_1.resolve)('src/assets/thumb/' + picName + '.jpeg');
     //const stats = await fsPromises.access(outputPath, fs.constants.F_OK,)
     try {
         yield (0, promises_1.access)(outputPath, fs_1.constants.F_OK);
@@ -28,35 +28,28 @@ const resize = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
         res.sendFile(outputPath);
     }
     catch (_a) {
-        console.error('File doesnt exist in path, I will resize');
+        const processedImage = (yield resizeImage(picName, picWidth, picHeight, outputPath));
+        //console.log(processedImage);
+        res.sendFile(processedImage, function (err) {
+            if (err) {
+                console.log('333' + err);
+            }
+            else {
+                console.log('Sent:', processedImage);
+            }
+        });
     }
-    // .catch(async (error) => {
-    //   if (error) {
-    //     console.log('File doesnt exist in path, I will resize');
-    //     const processedImage = await resizeImage(picName, picWidth, picHeight, outputPath) as unknown as string;
-    //     console.log(processedImage);
-    //     res.sendFile(processedImage);
-    //   }
-    //   // else {
-    //   //   console.log('File exists');
-    //   //   res.sendFile(outputPath);
-    //   // }
-    // });
     next();
 });
 function resizeImage(picName, picWidth, picHeight, outputPath) {
     return __awaiter(this, void 0, void 0, function* () {
         const inputPath = (0, posix_1.resolve)('src/assets/full/' + picName + '.jpeg');
         try {
-            yield (0, sharp_1.default)(inputPath)
-                .resize(picWidth, picHeight)
-                .toFile(outputPath, function (err) {
-                console.log(err);
-            });
+            yield (0, sharp_1.default)(inputPath).resize(picWidth, picHeight).toFile(outputPath);
             return outputPath;
         }
         catch (err) {
-            console.log(err);
+            console.log('111' + err);
         }
     });
 }
