@@ -3,7 +3,7 @@ import resizePic from '../utilities/resizePic';
 const routes = express.Router();
 
 routes.get('/', (req, res) => {
-  res.send('all pictures');
+  //res.send('all pictures');
 });
 
 routes.get('/images', resizePic, (req, res) => {

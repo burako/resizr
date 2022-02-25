@@ -15,3 +15,4 @@ app.use('/images', routeIndex_1.default);
 app.listen(port, () => {
     console.log(`this app is listening to you on port ${port}`);
 });
+exports.default = app;

@@ -7,7 +7,7 @@ import { constants } from 'fs';
 const resize = async (
   req: express.Request,
   res: express.Response,
-  next: Function
+  next: express.NextFunction
 ): Promise<void> => {
   const picName = req.query.picname as string;
   const picWidth = parseInt(req.query.width as string);
@@ -19,7 +19,6 @@ const resize = async (
 
   try {
     await access(outputPath, constants.F_OK);
-    console.log('can access');
     res.sendFile(outputPath);
   } catch {
     const processedImage = (await resizeImage(
@@ -28,12 +27,10 @@ const resize = async (
       picHeight,
       outputPath
     )) as unknown as string;
-    //console.log(processedImage);
+    
     res.sendFile(processedImage, function (err) {
       if (err) {
-        console.log('333' + err);
-      } else {
-        console.log('Sent:', processedImage);
+        console.log(err);
       }
     });
   }
@@ -52,7 +49,8 @@ async function resizeImage(
     await sharp(inputPath).resize(picWidth, picHeight).toFile(outputPath);
     return outputPath;
   } catch (err) {
-    console.log('111' + err);
+    const errorPic = resolve('src/assets/full/wentwrong.jpeg');
+    return errorPic;
   }
 }
 

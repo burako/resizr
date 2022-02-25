@@ -24,18 +24,13 @@ const resize = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
     //const stats = await fsPromises.access(outputPath, fs.constants.F_OK,)
     try {
         yield (0, promises_1.access)(outputPath, fs_1.constants.F_OK);
-        console.log('can access');
         res.sendFile(outputPath);
     }
     catch (_a) {
         const processedImage = (yield resizeImage(picName, picWidth, picHeight, outputPath));
-        //console.log(processedImage);
         res.sendFile(processedImage, function (err) {
             if (err) {
-                console.log('333' + err);
-            }
-            else {
-                console.log('Sent:', processedImage);
+                console.log(err);
             }
         });
     }
@@ -49,7 +44,8 @@ function resizeImage(picName, picWidth, picHeight, outputPath) {
             return outputPath;
         }
         catch (err) {
-            console.log('111' + err);
+            const errorPic = (0, posix_1.resolve)('src/assets/full/wentwrong.jpeg');
+            return errorPic;
         }
     });
 }
