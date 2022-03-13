@@ -9,14 +9,15 @@ const resize = async (
   res: express.Response,
   next: express.NextFunction
 ): Promise<void> => {
+  //gets user parameters from the url
   const picName = req.query.picname as string;
   const picWidth = parseInt(req.query.width as string);
   const picHeight = parseInt(req.query.height as string);
-
+  //sets up the path for transformed image to be placed or an existing image to be searched
   const outputPath = resolve('src/assets/thumb/' + picName + '.jpeg');
 
-  //const stats = await fsPromises.access(outputPath, fs.constants.F_OK,)
-
+  //if file does not exist, calls resizeImage() asynchronously to resize the image using sharp
+  // if exists, serves the existing image
   try {
     await access(outputPath, constants.F_OK);
     res.sendFile(outputPath);
@@ -27,7 +28,7 @@ const resize = async (
       picHeight,
       outputPath
     )) as unknown as string;
-    
+
     res.sendFile(processedImage, function (err) {
       if (err) {
         console.log(err);
@@ -55,6 +56,6 @@ async function resizeImage(
 }
 
 export default {
-  resize, 
+  resize,
   resizeImage
 };

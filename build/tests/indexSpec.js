@@ -17,12 +17,12 @@ const supertest_1 = __importDefault(require("supertest"));
 const index_1 = __importDefault(require("../index"));
 const resizePic_1 = __importDefault(require("../utilities/resizePic"));
 const request = (0, supertest_1.default)(index_1.default);
-const endpoint = "/images";
-it("expects endpoint to respond with code 200", () => __awaiter(void 0, void 0, void 0, function* () {
+const endpoint = '/images';
+it('expects endpoint to respond with code 200', () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield request.get(endpoint);
     expect(result.status).toBe(200);
 }));
-it("expects resizeImage() to resize an image successfully", () => __awaiter(void 0, void 0, void 0, function* () {
+it('expects resizeImage() to resize fjord.jpeg successfully', () => __awaiter(void 0, void 0, void 0, function* () {
     const resultPath = (0, posix_1.resolve)('src/assets/thumb/fjord.jpeg');
     const result = yield resizePic_1.default.resizeImage('fjord', 200, 300, resultPath);
     expect(result).toMatch(resultPath);

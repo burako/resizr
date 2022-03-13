@@ -7,9 +7,9 @@ const express_1 = __importDefault(require("express"));
 const resizePic_1 = __importDefault(require("../utilities/resizePic"));
 const routes = express_1.default.Router();
 routes.get('/', (req, res) => {
-    //res.send('all pictures');
+    res.send('this is the root path');
 });
 routes.get('/images', resizePic_1.default.resize, (req, res) => {
-    //res.send('get name and size from url, resize using middleware');
+    //accesses middleware to transform or serve an image
 });
 exports.default = routes;

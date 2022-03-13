@@ -17,11 +17,14 @@ const posix_1 = require("path/posix");
 const promises_1 = require("fs/promises");
 const fs_1 = require("fs");
 const resize = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    //gets user parameters from the url
     const picName = req.query.picname;
     const picWidth = parseInt(req.query.width);
     const picHeight = parseInt(req.query.height);
+    //sets up the path for transformed image to be placed or an existing image to be searched
     const outputPath = (0, posix_1.resolve)('src/assets/thumb/' + picName + '.jpeg');
-    //const stats = await fsPromises.access(outputPath, fs.constants.F_OK,)
+    //if file does not exist, calls resizeImage() asynchronously to resize the image using sharp
+    // if exists, serves the existing image
     try {
         yield (0, promises_1.access)(outputPath, fs_1.constants.F_OK);
         res.sendFile(outputPath);

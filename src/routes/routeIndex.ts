@@ -3,11 +3,11 @@ import resizePic from '../utilities/resizePic';
 const routes = express.Router();
 
 routes.get('/', (req, res) => {
-  //res.send('all pictures');
+  res.send('this is the root path');
 });
 
 routes.get('/images', resizePic.resize, (req, res) => {
-  //res.send('get name and size from url, resize using middleware');
+  //accesses middleware to transform or serve an image
 });
 
 export default routes;

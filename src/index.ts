@@ -4,10 +4,6 @@ import routes from './routes/routeIndex';
 const app = express();
 const port = 3000;
 
-// app.get('/api', function (req, res) {
-//   res.send('resizing the image');
-// });
-
 app.use('/', routes);
 app.use('/images', routes);
 
