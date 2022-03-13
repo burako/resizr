@@ -49,4 +49,7 @@ function resizeImage(picName, picWidth, picHeight, outputPath) {
         }
     });
 }
-exports.default = resize;
+exports.default = {
+    resize,
+    resizeImage
+};

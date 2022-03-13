@@ -6,7 +6,7 @@ routes.get('/', (req, res) => {
   //res.send('all pictures');
 });
 
-routes.get('/images', resizePic, (req, res) => {
+routes.get('/images', resizePic.resize, (req, res) => {
   //res.send('get name and size from url, resize using middleware');
 });
 

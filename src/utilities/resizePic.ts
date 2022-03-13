@@ -54,4 +54,7 @@ async function resizeImage(
   }
 }
 
-export default resize;
+export default {
+  resize, 
+  resizeImage
+};

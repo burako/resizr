@@ -9,7 +9,7 @@ const routes = express_1.default.Router();
 routes.get('/', (req, res) => {
     //res.send('all pictures');
 });
-routes.get('/images', resizePic_1.default, (req, res) => {
+routes.get('/images', resizePic_1.default.resize, (req, res) => {
     //res.send('get name and size from url, resize using middleware');
 });
 exports.default = routes;
