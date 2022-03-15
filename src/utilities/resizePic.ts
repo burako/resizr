@@ -1,6 +1,6 @@
 import express, { response } from 'express';
 import sharp from 'sharp';
-import { resolve } from 'path/posix';
+import path, { resolve } from 'path/posix';
 import { access } from 'fs/promises';
 import { constants } from 'fs';
 
@@ -14,10 +14,12 @@ const resize = async (
   const picWidth = parseInt(req.query.width as string);
   const picHeight = parseInt(req.query.height as string);
   //sets up the path for transformed image to be placed or an existing image to be searched
-  const outputPath = resolve('src/assets/thumb/' + picName + '.jpeg');
+  const newFileName = picName + picWidth + 'x' + picHeight + '.jpeg';
+  const outputPath = resolve('src/assets/thumb/' + newFileName);
 
   //if file does not exist, calls resizeImage() asynchronously to resize the image using sharp
   // if exists, serves the existing image
+
   try {
     await access(outputPath, constants.F_OK);
     res.sendFile(outputPath);
@@ -29,11 +31,18 @@ const resize = async (
       outputPath
     )) as unknown as string;
 
-    res.sendFile(processedImage, function (err) {
-      if (err) {
-        console.log(err);
-      }
-    });
+  //resized image is shown if it worked without an issue
+    if (processedImage == outputPath) {
+      res.sendFile(processedImage, function (err) {
+        if (err) {
+          res.send(err);
+        }
+      });
+    } else {
+  //error message from sharp is presented to the user if there are any
+      const errorMessage: string = processedImage.toString();
+      res.send(errorMessage);
+    }
   }
 
   next();
@@ -50,8 +59,7 @@ async function resizeImage(
     await sharp(inputPath).resize(picWidth, picHeight).toFile(outputPath);
     return outputPath;
   } catch (err) {
-    const errorPic = resolve('src/assets/full/wentwrong.jpeg');
-    return errorPic;
+    return err as string;
   }
 }
 

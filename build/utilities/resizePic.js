@@ -22,7 +22,8 @@ const resize = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
     const picWidth = parseInt(req.query.width);
     const picHeight = parseInt(req.query.height);
     //sets up the path for transformed image to be placed or an existing image to be searched
-    const outputPath = (0, posix_1.resolve)('src/assets/thumb/' + picName + '.jpeg');
+    const newFileName = picName + picWidth + 'x' + picHeight + '.jpeg';
+    const outputPath = (0, posix_1.resolve)('src/assets/thumb/' + newFileName);
     //if file does not exist, calls resizeImage() asynchronously to resize the image using sharp
     // if exists, serves the existing image
     try {
@@ -31,11 +32,17 @@ const resize = (req, res, next) => __awaiter(void 0, void 0, void 0, function* (
     }
     catch (_a) {
         const processedImage = (yield resizeImage(picName, picWidth, picHeight, outputPath));
-        res.sendFile(processedImage, function (err) {
-            if (err) {
-                console.log(err);
-            }
-        });
+        if (processedImage == outputPath) {
+            res.sendFile(processedImage, function (err) {
+                if (err) {
+                    res.send(err);
+                }
+            });
+        }
+        else {
+            const errorMessage = processedImage.toString();
+            res.send(errorMessage);
+        }
     }
     next();
 });
@@ -47,8 +54,7 @@ function resizeImage(picName, picWidth, picHeight, outputPath) {
             return outputPath;
         }
         catch (err) {
-            const errorPic = (0, posix_1.resolve)('src/assets/full/wentwrong.jpeg');
-            return errorPic;
+            return err;
         }
     });
 }

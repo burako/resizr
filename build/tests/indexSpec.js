@@ -23,7 +23,7 @@ it('expects endpoint to respond with code 200', () => __awaiter(void 0, void 0, 
     expect(result.status).toBe(200);
 }));
 it('expects resizeImage() to resize fjord.jpeg successfully', () => __awaiter(void 0, void 0, void 0, function* () {
-    const resultPath = (0, posix_1.resolve)('src/assets/thumb/fjord.jpeg');
+    const resultPath = (0, posix_1.resolve)('src/assets/thumb/fjord200x300.jpeg');
     const result = yield resizePic_1.default.resizeImage('fjord', 200, 300, resultPath);
     expect(result).toMatch(resultPath);
 }));
