@@ -1,7 +1,7 @@
-This project is created in scope of an image processing API project withing the udacity full stack Javascript developer nanodegree program
+This project is created in scope of an image processing API project within the udacity full stack Javascript developer nanodegree program
 
 The scripts needed to test/start/build your application:
-  test: npm run jasmine (delete thumb/fjord.jpeg in order to run the test properly for resize functionality)
+  test: npm run jasmine
   start: npm run start
   build: npm run build
   output directory: build
